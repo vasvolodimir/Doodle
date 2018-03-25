@@ -34,6 +34,8 @@ void GameView::generateBricks(const int count)
 
     for(int i=0; i<count; i++)
         generate();
+
+    LOG_D("");
 }
 
 bool GameView::generate()
@@ -48,10 +50,7 @@ bool GameView::generate()
         for(int i=0; i<m_bricks.size(); i++)
         {
             if(m_bricks[i]->collidesWithItem(item))
-            {
-                qDebug() << "colide";
                 break;
-            }
 
             if(i == m_bricks.size() - 1)
                 correct = true;

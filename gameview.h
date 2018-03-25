@@ -8,6 +8,7 @@
 
 #include <ctime>
 #include "solidebrick.h"
+#include "logger.h"
 
 class GameView : public QGraphicsView
 {

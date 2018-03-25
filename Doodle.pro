@@ -28,10 +28,13 @@ SOURCES += \
         mainscreen.cpp \
     controller.cpp \
     gameview.cpp \
-    solidebrick.cpp
+    solidebrick.cpp \
+    creature.cpp
 
 HEADERS += \
         mainscreen.h \
     controller.h \
     gameview.h \
-    solidebrick.h
+    solidebrick.h \
+    creature.h \
+    logger.h
