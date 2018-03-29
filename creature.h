@@ -5,15 +5,19 @@
 #include <QPixmap>
 #include <QVector>
 
+#include "logger.h"
+
 class Creature : public QGraphicsPixmapItem
 {
+
+protected:
     enum Type { Hero };
     enum Skin { LEFT, RIGHT, FRONT};
 
 public:
+        Creature(size_t countSkin = 3) : countSkin(countSkin) { m_skins.resize(countSkin); LOG_D(countSkin);}
         virtual Type type() = 0;
         virtual ~Creature() {}
-        Creature(size_t countSkin) : countSkin(countSkin) { m_skins.resize(countSkin); }
 
         QPixmap *getLeftSkin() { return (m_skins.size() >= 1) ? m_skins.at(LEFT) : nullptr; }
         QPixmap *getRightSkin() { return (m_skins.size() >= 2) ? m_skins.at(RIGHT) : nullptr; }

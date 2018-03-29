@@ -29,7 +29,9 @@ SOURCES += \
     controller.cpp \
     gameview.cpp \
     solidebrick.cpp \
-    creature.cpp
+    creature.cpp \
+    hero.cpp \
+    HeroMoveManager.cpp
 
 HEADERS += \
         mainscreen.h \
@@ -37,4 +39,6 @@ HEADERS += \
     gameview.h \
     solidebrick.h \
     creature.h \
-    logger.h
+    logger.h \
+    hero.h \
+    HeroMoveManager.h

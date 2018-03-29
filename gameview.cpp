@@ -6,6 +6,7 @@ GameView::GameView(QWidget *parent)
     this->setScene(m_scene);
 
     initView();
+    createHero();
 }
 
 GameView *GameView::instance(QWidget *parent)
@@ -16,7 +17,12 @@ GameView *GameView::instance(QWidget *parent)
 
 GameView::~GameView()
 {
+    delete m_scene;
+    delete m_hero;
+    delete m_heroManager;
 
+    for(int i=0; i<m_bricks.size(); i++)
+        delete m_bricks[i];
 }
 
 void GameView::initView()
@@ -69,4 +75,17 @@ bool GameView::generate()
     }
 
     return false;
+}
+
+void GameView::createHero()
+{
+    m_hero = new Hero;
+    m_scene->addItem(m_hero);
+
+    m_heroManager = new HeroMoveManager(this);
+}
+
+void GameView::keyPressEvent(QKeyEvent *event)
+{
+    m_heroManager->handleKeyEvent(event);
 }
