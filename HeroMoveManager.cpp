@@ -1,13 +1,14 @@
 #include "HeroMoveManager.h"
 
 HeroMoveManager::HeroMoveManager(GameView *view, QObject *parent) : QObject(parent), m_view(view),
-    m_hero(view->getHero())
+    m_hero(Hero::instance())
 {
     initPosition();
 
     m_timer = new QTimer;
     connect(m_timer, SIGNAL(timeout()), this, SLOT(Jumping()));
 
+    // TODO: Looking for a good value of timer interval
     m_timer->setInterval(5);
     m_timer->start();
 }
@@ -17,6 +18,7 @@ HeroMoveManager::~HeroMoveManager()
 
 }
 
+// TODO: A movemanet logic should be refactoring
 void HeroMoveManager::handleKeyEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_A)

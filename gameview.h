@@ -11,8 +11,10 @@
 #include "logger.h"
 #include "hero.h"
 #include "HeroMoveManager.h"
+#include "BricksMoveManager.h"
 
 class HeroMoveManager;
+class BricksMoveManager;
 class Hero;
 
 class GameView : public QGraphicsView
@@ -24,21 +26,21 @@ class GameView : public QGraphicsView
     GameView &operator=(GameView&);
 
     enum initGeometry : unsigned {X = 0, Y = 0, Width = 100, Height = 20};
+    const unsigned bricksCount = 20;
 
     public:
              static GameView *instance(QWidget *parent = 0);
 
-             QGraphicsScene *getScene() { return m_scene; }
-             Hero *getHero() { return m_hero; }
-             QVector<SolideBrick*> getBricks() { return m_bricks; }
+             QGraphicsScene *getScene() const { return m_scene; }
+             QVector<SolideBrick*> getBricks() const { return m_bricks; }
 
             ~GameView();
 
     private:
             QGraphicsScene *m_scene;
             QVector<SolideBrick*> m_bricks;
-            Hero *m_hero;
             HeroMoveManager *m_heroManager;
+            BricksMoveManager *m_bricksManager;
 
     private:
             void initView();

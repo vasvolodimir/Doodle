@@ -7,7 +7,7 @@ MainScreen::MainScreen(QWidget *parent): QDialog(parent)
 
 MainScreen::~MainScreen()
 {
-
+    delete instance();
 }
 
 MainScreen *MainScreen::instance(QWidget *parent)

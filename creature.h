@@ -19,9 +19,9 @@ public:
         virtual Type type() = 0;
         virtual ~Creature() {}
 
-        QPixmap *getLeftSkin() { return (m_skins.size() >= 1) ? m_skins.at(LEFT) : nullptr; }
-        QPixmap *getRightSkin() { return (m_skins.size() >= 2) ? m_skins.at(RIGHT) : nullptr; }
-        QPixmap *getFrontSkin() { return (m_skins.size() >= 3) ? m_skins.at(FRONT) : nullptr; }
+        QPixmap *getLeftSkin() const { return (m_skins.size() >= 1) ? m_skins.at(LEFT) : nullptr; }
+        QPixmap *getRightSkin() const { return (m_skins.size() >= 2) ? m_skins.at(RIGHT) : nullptr; }
+        QPixmap *getFrontSkin() const { return (m_skins.size() >= 3) ? m_skins.at(FRONT) : nullptr; }
 
         void setLeftSkin(QPixmap *pixmap);
         void setRightSkin(QPixmap *pixmap);

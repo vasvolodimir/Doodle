@@ -18,8 +18,8 @@ GameView *GameView::instance(QWidget *parent)
 GameView::~GameView()
 {
     delete m_scene;
-    delete m_hero;
     delete m_heroManager;
+    delete instance();
 
     for(int i=0; i<m_bricks.size(); i++)
         delete m_bricks[i];
@@ -28,7 +28,8 @@ GameView::~GameView()
 void GameView::initView()
 {
     // FIXME: Change the magic number
-    generateBricks(10);
+    generateBricks(bricksCount);
+    m_bricksManager = new BricksMoveManager(m_bricks, this);
 
     // sets the background-color
     this->setStyleSheet("background: rgb(163, 193, 245);");
@@ -51,7 +52,10 @@ bool GameView::generate()
 
     while(true)
     {
-        item->setPos(rand() % (width() - 100), rand() % (height() - 20));
+        int x = rand() % (width() - Width);
+        int y = rand() % (height() - Height);
+
+        item->setPos(x, y);
 
         for(int i=0; i<m_bricks.size(); i++)
         {
@@ -79,9 +83,7 @@ bool GameView::generate()
 
 void GameView::createHero()
 {
-    m_hero = new Hero;
-    m_scene->addItem(m_hero);
-
+    m_scene->addItem(Hero::instance(3));
     m_heroManager = new HeroMoveManager(this);
 }
 

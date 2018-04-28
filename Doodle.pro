@@ -31,7 +31,8 @@ SOURCES += \
     solidebrick.cpp \
     creature.cpp \
     hero.cpp \
-    HeroMoveManager.cpp
+    HeroMoveManager.cpp \
+    BricksMoveManager.cpp
 
 HEADERS += \
         mainscreen.h \
@@ -41,4 +42,5 @@ HEADERS += \
     creature.h \
     logger.h \
     hero.h \
-    HeroMoveManager.h
+    HeroMoveManager.h \
+    BricksMoveManager.h

@@ -7,8 +7,13 @@
 class Hero : public Creature
 {
 
+private:
+       Hero(size_t countSkin = 3);
+       Hero(const Hero &);
+       Hero &operator=(Hero &);
 public:
-        Hero(size_t countSkin = 3);
+        virtual ~Hero();
+        static Hero *instance(size_t countSkin = 3);
         virtual Creature::Type type() { return Type::Hero; }
 };
 

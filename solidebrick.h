@@ -12,8 +12,8 @@ public:
         ~SolideBrick();
 
 public:
-        QGraphicsLineItem *getColideLine() { return m_ColideLine; }
-        QGraphicsLineItem *getUnColideLine() { return m_UnColideLine; }
+        QGraphicsLineItem *getColideLine() const { return m_ColideLine; }
+        QGraphicsLineItem *getUnColideLine() const { return m_UnColideLine; }
 
 protected:
            QRectF boundingRect() const;
