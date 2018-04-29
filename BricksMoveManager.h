@@ -4,10 +4,12 @@
 #include <QObject>
 #include <QTimer>
 
+#include <ctime>
+
 #include "solidebrick.h"
 #include "hero.h"
 #include "gameview.h"
-#include <unistd.h>
+#include "logger.h"
 
 class SolideBrick;
 class Hero;
@@ -17,10 +19,14 @@ class BricksMoveManager : public QObject
    Q_OBJECT
 
     enum timerKind {Main, Scrolling};
+    enum initGeometry : unsigned {X = 0, Y = 0, Width = 100, Height = 20};
+    const unsigned bricksCount = 20;
 
 public:
-        BricksMoveManager(QVector<SolideBrick*> &bricks, QObject *parent = 0);
+        BricksMoveManager(QObject *parent = 0);
         ~BricksMoveManager();
+
+        QVector<SolideBrick*> getBricks() const { return m_bricks; }
 
 private slots:
         void calcFirstAndSecondBrick();
@@ -28,6 +34,8 @@ private slots:
 
 private:
         QTimer *createTimer(timerKind kind, int interval, QTimer **timer);
+        void generateBricks(const int count);
+        bool generate();
 
 private:
         QVector<SolideBrick*> m_bricks;
@@ -37,6 +45,7 @@ private:
 private:
         QTimer *m_timerMain;
         QTimer *m_timerScrolling;
+        QObject *m_parent;
 
 };
 

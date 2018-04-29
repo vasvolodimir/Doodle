@@ -1,7 +1,9 @@
 #include "HeroMoveManager.h"
 
-HeroMoveManager::HeroMoveManager(GameView *view, QObject *parent) : QObject(parent), m_view(view),
-    m_hero(Hero::instance())
+HeroMoveManager::HeroMoveManager(BricksMoveManager *manager, QObject *parent)
+    : QObject(parent),
+      m_bricksManager(manager),
+      m_hero(Hero::instance())
 {
     initPosition();
 
@@ -32,7 +34,7 @@ void HeroMoveManager::handleKeyEvent(QKeyEvent *event)
 
 void HeroMoveManager::initPosition()
 {
-    QVector<SolideBrick*> bricks = m_view->getBricks();
+    QVector<SolideBrick*> bricks = m_bricksManager->getBricks();
     SolideBrick *max = bricks.at(0);
 
     for(int i=1; i<bricks.size(); i++)
@@ -44,7 +46,7 @@ void HeroMoveManager::initPosition()
 
 void HeroMoveManager::Jumping()
 {
-    static QVector<SolideBrick*> bricks = m_view->getBricks();
+    static QVector<SolideBrick*> bricks = m_bricksManager->getBricks();
     static int old_y = 0;
     static const int jumpEdge = 150;
 

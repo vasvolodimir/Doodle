@@ -19,11 +19,10 @@ class MainScreen : public QDialog
 
 public:
     ~MainScreen();
-     static MainScreen *instance(QWidget *parent = 0);
+     static MainScreen *instance();
 
 private:
         void initScreen();
-
 };
 
 #endif // MAINSCREEN_H

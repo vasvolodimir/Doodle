@@ -7,19 +7,18 @@ MainScreen::MainScreen(QWidget *parent): QDialog(parent)
 
 MainScreen::~MainScreen()
 {
-    delete instance();
 }
 
-MainScreen *MainScreen::instance(QWidget *parent)
+MainScreen *MainScreen::instance()
 {
-    static MainScreen *instance = new MainScreen(parent);
-    return instance;
+    static MainScreen instance;
+    return &instance;
 }
 
 void MainScreen::initScreen()
 {
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(GameView::instance(this));
+    layout->addWidget(new GameView(this));
     layout->setContentsMargins(0, 0, 0, 0);
     this->setLayout(layout);
 

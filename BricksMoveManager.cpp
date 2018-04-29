@@ -1,14 +1,17 @@
 #include "BricksMoveManager.h"
 
-BricksMoveManager::BricksMoveManager(QVector<SolideBrick *> &bricks, QObject *parent)
+BricksMoveManager::BricksMoveManager(QObject *parent)
     : QObject(parent),
-      m_bricks(bricks),
+      m_bricks(0),
       m_firstBrick(0),
       m_secondBrick(0),
       m_timerMain(0),
-      m_timerScrolling(0)
+      m_timerScrolling(0),
+      m_parent(parent)
 
 {
+    generateBricks(bricksCount);
+
     createTimer(Main, 5, &m_timerMain);
     createTimer(Scrolling, 5, &m_timerScrolling);
 
@@ -89,4 +92,53 @@ QTimer *BricksMoveManager::createTimer(timerKind kind, int interval, QTimer **ti
     }
 
     return *timer;
+}
+
+void BricksMoveManager::generateBricks(const int count)
+{
+    srand(time(NULL));
+
+    for(int i=0; i<count; i++)
+        generate();
+
+    LOG_D("");
+}
+
+bool BricksMoveManager::generate()
+{
+    SolideBrick *item = new SolideBrick(QRectF(X, Y, Width, Height));
+    bool correct = false;
+
+    if (QGraphicsScene *scene = qobject_cast<QGraphicsScene*> (m_parent))
+    {
+        while(true)
+        {
+            int x = rand() % ((int) scene->width() - Width);
+            int y = rand() % ((int) scene->height() - Height);
+
+            item->setPos(x, y);
+
+            for(int i=0; i<m_bricks.size(); i++)
+            {
+                if(m_bricks[i]->collidesWithItem(item))
+                    break;
+
+                if(i == m_bricks.size() - 1)
+                    correct = true;
+            }
+
+            if(correct || !m_bricks.size())
+            {
+                m_bricks.push_back(item);
+                // FIXME: It looks strange from OOP view point
+                scene->addItem(item);
+                scene->addItem(item->getColideLine());
+                scene->addItem(item->getUnColideLine());
+                return true;
+            }
+
+        }
+    }
+
+    return false;
 }

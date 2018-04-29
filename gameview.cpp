@@ -1,11 +1,8 @@
 #include "gameview.h"
 
-GameView* GameView::m_instance = nullptr;
-
 GameView::GameView(QWidget *parent)
-    : /*QGraphicsView(parent),*/
+    : QGraphicsView(parent),
       m_scene(0),
-      m_bricks(0),
       m_heroManager(0),
       m_bricksManager(0)
 {
@@ -16,85 +13,25 @@ GameView::GameView(QWidget *parent)
     createHero();
 }
 
-GameView *GameView::instance(QWidget *parent)
-{
-    if(!m_instance)
-        m_instance = new GameView(parent);
-
-    return m_instance;
-}
-
 GameView::~GameView()
 {
     delete m_scene;
     delete m_heroManager;
     delete m_bricksManager;
-    delete m_instance;
-
-    for(int i=0; i<m_bricks.size(); i++)
-        delete m_bricks[i];
 }
 
 void GameView::initView()
 {
-    // FIXME: Change the magic number
-    generateBricks(bricksCount);
-    m_bricksManager = new BricksMoveManager(m_bricks, this);
+    m_bricksManager = new BricksMoveManager(m_scene);
 
     // sets the background-color
     this->setStyleSheet("background: rgb(163, 193, 245);");
 }
 
-void GameView::generateBricks(const int count)
-{
-    srand(time(NULL));
-
-    for(int i=0; i<count; i++)
-        generate();
-
-    LOG_D("");
-}
-
-bool GameView::generate()
-{
-    SolideBrick *item = new SolideBrick(QRectF(X, Y, Width, Height));
-    bool correct = false;
-
-    while(true)
-    {
-        int x = rand() % (width() - Width);
-        int y = rand() % (height() - Height);
-
-        item->setPos(x, y);
-
-        for(int i=0; i<m_bricks.size(); i++)
-        {
-            if(m_bricks[i]->collidesWithItem(item))
-                break;
-
-            if(i == m_bricks.size() - 1)
-                correct = true;
-        }
-
-        if(correct || !m_bricks.size())
-        {
-            m_bricks.push_back(item);
-            // FIXME: It looks strange from OOP view point
-            m_scene->addItem(item);
-            m_scene->addItem(item->getColideLine());
-            m_scene->addItem(item->getUnColideLine());
-            return true;
-        }
-
-    }
-
-    return false;
-}
-
 void GameView::createHero()
 {
     m_scene->addItem(Hero::instance(3));
-    m_heroManager = new HeroMoveManager(this);
+    m_heroManager = new HeroMoveManager(m_bricksManager, m_scene);
 }
 
 void GameView::keyPressEvent(QKeyEvent *event)
