@@ -41,6 +41,9 @@ class GameView : public QGraphicsView
     protected:
                 void keyPressEvent(QKeyEvent *event);
 
+    signals:
+             void timerStart();
+
 };
 
 #endif // GAMEVIEW_H

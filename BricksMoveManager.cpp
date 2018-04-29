@@ -15,7 +15,9 @@ BricksMoveManager::BricksMoveManager(QObject *parent)
     createTimer(Main, 5, &m_timerMain);
     createTimer(Scrolling, 5, &m_timerScrolling);
 
-    m_timerMain->start();
+     GameView *view = qobject_cast<GameView*> (parent->parent());
+     Q_ASSERT(view);
+     connect(view, SIGNAL(timerStart()), m_timerMain, SLOT(start()));
 }
 
 BricksMoveManager::~BricksMoveManager()
@@ -49,6 +51,7 @@ void BricksMoveManager::calcFirstAndSecondBrick()
     if(m_firstBrick && m_secondBrick)
     {
         m_difference = qAbs(m_secondBrick->y() - m_firstBrick->y());
+        emit timerStop(); // stop hero jumping
         m_timerScrolling->start();
         m_firstBrick = 0;
         m_secondBrick = 0;
@@ -69,6 +72,7 @@ void BricksMoveManager::scrollBricks()
     {
         m_timerScrolling->stop();
         m_timerMain->start();
+        emit timerStart();
     }
 }
 
@@ -109,8 +113,9 @@ bool BricksMoveManager::generate()
     SolideBrick *item = new SolideBrick(QRectF(X, Y, Width, Height));
     bool correct = false;
 
-    if (QGraphicsScene *scene = qobject_cast<QGraphicsScene*> (m_parent))
-    {
+    QGraphicsScene *scene = qobject_cast<QGraphicsScene*> (m_parent);
+    Q_ASSERT(scene);
+
         while(true)
         {
             int x = rand() % ((int) scene->width() - Width);
@@ -138,7 +143,6 @@ bool BricksMoveManager::generate()
             }
 
         }
-    }
 
     return false;
 }

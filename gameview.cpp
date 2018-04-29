@@ -6,7 +6,8 @@ GameView::GameView(QWidget *parent)
       m_heroManager(0),
       m_bricksManager(0)
 {
-    m_scene = new QGraphicsScene(parent->rect());
+    m_scene = new QGraphicsScene(this);
+    m_scene->setSceneRect(parent->rect());
     this->setScene(m_scene);
 
     initView();
@@ -32,6 +33,7 @@ void GameView::createHero()
 {
     m_scene->addItem(Hero::instance(3));
     m_heroManager = new HeroMoveManager(m_bricksManager, m_scene);
+    emit timerStart();
 }
 
 void GameView::keyPressEvent(QKeyEvent *event)

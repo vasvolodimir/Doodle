@@ -47,6 +47,10 @@ private:
         QTimer *m_timerScrolling;
         QObject *m_parent;
 
+signals:
+        void timerStop();
+        void timerStart();
+
 };
 
 #endif // BRICKSMOVEMANAGER_H

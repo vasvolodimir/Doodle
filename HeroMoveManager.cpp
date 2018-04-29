@@ -13,6 +13,9 @@ HeroMoveManager::HeroMoveManager(BricksMoveManager *manager, QObject *parent)
     // TODO: Looking for a good value of timer interval
     m_timer->setInterval(5);
     m_timer->start();
+
+    connect(m_bricksManager, SIGNAL(timerStart()), m_timer, SLOT(start()));
+    connect(m_bricksManager, SIGNAL(timerStop()), m_timer, SLOT(stop()));
 }
 
 HeroMoveManager::~HeroMoveManager()
