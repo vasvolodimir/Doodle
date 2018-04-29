@@ -1,6 +1,13 @@
 #include "gameview.h"
 
+GameView* GameView::m_instance = nullptr;
+
 GameView::GameView(QWidget *parent)
+    : /*QGraphicsView(parent),*/
+      m_scene(0),
+      m_bricks(0),
+      m_heroManager(0),
+      m_bricksManager(0)
 {
     m_scene = new QGraphicsScene(parent->rect());
     this->setScene(m_scene);
@@ -11,15 +18,18 @@ GameView::GameView(QWidget *parent)
 
 GameView *GameView::instance(QWidget *parent)
 {
-    static GameView *instance = new GameView(parent);
-    return instance;
+    if(!m_instance)
+        m_instance = new GameView(parent);
+
+    return m_instance;
 }
 
 GameView::~GameView()
 {
     delete m_scene;
     delete m_heroManager;
-    delete instance();
+    delete m_bricksManager;
+    delete m_instance;
 
     for(int i=0; i<m_bricks.size(); i++)
         delete m_bricks[i];

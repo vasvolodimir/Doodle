@@ -37,6 +37,8 @@ class GameView : public QGraphicsView
             ~GameView();
 
     private:
+            // TODO: if param ctor is needed - use NOT-Mayers singleton
+            static GameView *m_instance;
             QGraphicsScene *m_scene;
             QVector<SolideBrick*> m_bricks;
             HeroMoveManager *m_heroManager;
