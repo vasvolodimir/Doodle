@@ -17,7 +17,7 @@ protected:
 public:
         Creature(size_t countSkin = 3) : countSkin(countSkin) { m_skins.resize(countSkin); LOG_D(countSkin);}
         virtual Type type() = 0;
-        virtual ~Creature() {}
+        virtual ~Creature();
 
         QPixmap *getLeftSkin() const { return (m_skins.size() >= 1) ? m_skins.at(LEFT) : nullptr; }
         QPixmap *getRightSkin() const { return (m_skins.size() >= 2) ? m_skins.at(RIGHT) : nullptr; }

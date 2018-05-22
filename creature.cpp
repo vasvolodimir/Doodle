@@ -1,5 +1,11 @@
 #include "creature.h"
 
+Creature::~Creature()
+{
+    for(int i=0; i<m_skins.size(); i++)
+        delete m_skins[i];
+}
+
 void Creature::setLeftSkin(QPixmap *pixmap)
 {
     if(getLeftSkin() == pixmap || m_skins.size() < LEFT)

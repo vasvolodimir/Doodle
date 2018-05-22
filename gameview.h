@@ -40,6 +40,7 @@ class GameView : public QGraphicsView
 
     protected:
                 void keyPressEvent(QKeyEvent *event);
+                void keyReleaseEvent(QKeyEvent *event);
 
     signals:
              void timerStart();

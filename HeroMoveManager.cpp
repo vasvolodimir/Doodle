@@ -24,15 +24,30 @@ HeroMoveManager::~HeroMoveManager()
 }
 
 // TODO: A movemanet logic should be refactoring
-void HeroMoveManager::handleKeyEvent(QKeyEvent *event)
+void HeroMoveManager::handleKeyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_A)
+    {
+        m_hero->setPixmap(*m_hero->getLeftSkin());
         for(int i=0; i<10; i++)
             m_hero->setPos(m_hero->x() - 1, m_hero->y());
+    }
 
     if(event->key() == Qt::Key_D)
+    {
+        m_hero->setPixmap(*m_hero->getRightSkin());
         for(int i=0; i<10; i++)
             m_hero->setPos(m_hero->x() + 1, m_hero->y());
+    }
+
+    if(event->key() == Qt::Key_W)
+        m_hero->setPixmap(*m_hero->getFrontSkin());
+}
+
+void HeroMoveManager::handleKeyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_W)
+        m_hero->setPixmap(*m_hero->getLeftSkin());
 }
 
 void HeroMoveManager::initPosition()

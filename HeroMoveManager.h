@@ -24,7 +24,9 @@ class HeroMoveManager : public QObject
 public:
         HeroMoveManager(BricksMoveManager *manager, QObject *parent = 0);
         ~HeroMoveManager();
-        void handleKeyEvent(QKeyEvent *event);
+
+        void handleKeyPressEvent(QKeyEvent *event);
+        void handleKeyReleaseEvent(QKeyEvent *event);
 
 private:
         void initPosition();

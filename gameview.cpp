@@ -32,11 +32,17 @@ void GameView::initView()
 void GameView::createHero()
 {
     m_scene->addItem(Hero::instance(3));
+
     m_heroManager = new HeroMoveManager(m_bricksManager, m_scene);
     emit timerStart();
 }
 
 void GameView::keyPressEvent(QKeyEvent *event)
 {
-    m_heroManager->handleKeyEvent(event);
+    m_heroManager->handleKeyPressEvent(event);
+}
+
+void GameView::keyReleaseEvent(QKeyEvent *event)
+{
+    m_heroManager->handleKeyReleaseEvent(event);
 }
