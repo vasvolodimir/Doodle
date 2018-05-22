@@ -1,0 +1,31 @@
+<section class="py-2">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <h8 class="display-3 mt-5 pt-5">
+                The discount is valid only today. Take the purchase of a super cool game!
+            </h8><p class="lead">Super low price only for you</p>
+            <form action="/charge" method="POST">
+                <script
+                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{stripePublishableKey}}"
+                    data-amount="500"
+                    data-name="VFSKP Company"
+                    data-description="This game writen by VFSKP"
+                    data-zip-code="true"
+                    data-image="/img/1157.png"
+                    data-billing-address="true"
+                    data-panel-label="true"
+                    data-locale="auto">
+                </script>
+                <script>
+                    // Hide default stripe button
+                    document.getElementsByClassName('stripe-button-el')[0].style.display = 'none'; 
+                </script>
+                <button type="submit" class="btn btn-outline-dark text-white btn-lg">Purchase for $5</button>
+            </form>
+        </div> 
+        <div class="col-md-6">
+            <img src="/img/D.png" alt="" class="img-fluid">
+        </div>
+    </div>
+</section>
