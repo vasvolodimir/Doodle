@@ -10,7 +10,7 @@
 #include "hero.h"
 #include "BricksMoveManager.h"
 
-#define yOffset 50
+#define yOffset 70
 
 class GameView;
 class SolideBrick;

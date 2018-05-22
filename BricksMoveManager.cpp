@@ -7,17 +7,24 @@ BricksMoveManager::BricksMoveManager(QObject *parent)
       m_secondBrick(0),
       m_timerMain(0),
       m_timerScrolling(0),
-      m_parent(parent)
+      m_parent(parent),
+      m_scene(0)
 
 {
-    generateBricks(bricksCount);
+    m_scene = qobject_cast<QGraphicsScene*> (m_parent);
+    Q_ASSERT(m_scene);
+
+    generateBricks(Initial, std::pair<int, int>(m_scene->width(),
+                                                m_scene->height()), initBricksCount);
 
     createTimer(Main, 5, &m_timerMain);
     createTimer(Scrolling, 5, &m_timerScrolling);
 
-     GameView *view = qobject_cast<GameView*> (parent->parent());
+     GameView *view = qobject_cast<GameView*> (m_parent->parent());
      Q_ASSERT(view);
      connect(view, SIGNAL(timerStart()), m_timerMain, SLOT(start()));
+
+     LOG_D("GameView: " << m_scene);
 }
 
 BricksMoveManager::~BricksMoveManager()
@@ -50,9 +57,15 @@ void BricksMoveManager::calcFirstAndSecondBrick()
 
     if(m_firstBrick && m_secondBrick)
     {
-        m_difference = qAbs(m_secondBrick->y() - m_firstBrick->y());
+        m_difference = 2 * (qAbs(m_secondBrick->y() - m_firstBrick->y()));
+
+        generateBricks(Additional, std::pair<int, int>(m_scene->width(),
+                                                       m_scene->height()), stepBricksCount);
+        LOG_D("SIZE: " << m_bricks.size());
+
         emit timerStop(); // stop hero jumping
         m_timerScrolling->start();
+
         m_firstBrick = 0;
         m_secondBrick = 0;
     }
@@ -71,18 +84,41 @@ void BricksMoveManager::scrollBricks()
     else
     {
         m_timerScrolling->stop();
+        deleteBrick(); // all timers in this statment are disabled
         m_timerMain->start();
-        emit timerStart();
+        emit timerStart(); // start hero moving
     }
 }
 
-QTimer *BricksMoveManager::createTimer(timerKind kind, int interval, QTimer **timer)
+void BricksMoveManager::calcBrickPosition(std::pair<int, int> range, int x1, int y1, int &x2, int &y2)
+{
+    do
+    {
+        x2 = rand() % ((int) range.first - Width);
+        y2 = rand() % ((int) range.second /*/ 5*/ - Height);
+        //y2 *= -1;
+    }
+    while(Tools::distance(x1, y1, x2, y2) > Hero::instance()->getMaxJumpingEdge());
+}
+
+SolideBrick *BricksMoveManager::findTopBrick() const
+{
+    SolideBrick *top = m_bricks.at(0);
+
+    for(int i=1; i<m_bricks.size(); i++)
+        if(top->y() > m_bricks.at(i)->y())
+            top = m_bricks[i];
+
+    return top;
+}
+
+QTimer *BricksMoveManager::createTimer(timerType type, int interval, QTimer **timer)
 {
 
     *timer = new QTimer(this);
     (*timer)->setInterval(interval);
 
-    switch (kind)
+    switch (type)
     {
         case Main:
             connect(*timer, SIGNAL(timeout()), this, SLOT(calcFirstAndSecondBrick()));
@@ -98,28 +134,39 @@ QTimer *BricksMoveManager::createTimer(timerKind kind, int interval, QTimer **ti
     return *timer;
 }
 
-void BricksMoveManager::generateBricks(const int count)
+void BricksMoveManager::generateBricks(generateType type, std::pair<int, int> range, const int count)
 {
     srand(time(NULL));
 
     for(int i=0; i<count; i++)
-        generate();
+        generate(type, range);
 
     LOG_D("");
 }
 
-bool BricksMoveManager::generate()
+bool BricksMoveManager::generate(generateType type, std::pair<int, int> range)
 {
     SolideBrick *item = new SolideBrick(QRectF(X, Y, Width, Height));
     bool correct = false;
 
-    QGraphicsScene *scene = qobject_cast<QGraphicsScene*> (m_parent);
-    Q_ASSERT(scene);
-
         while(true)
         {
-            int x = rand() % ((int) scene->width() - Width);
-            int y = rand() % ((int) scene->height() - Height);
+            int x, y;
+
+            if(type == Initial)
+            {
+                x = rand() % ((int) range.first - Width);
+                y = rand() % ((int) range.second - Height);
+            }
+            else
+            {
+//                x = rand() % ((int) range.first - Width);
+//                y = rand() % ((int) range.second / 5 - Height);
+//                y *= -1;
+
+                SolideBrick *top = findTopBrick();
+                calcBrickPosition(range, top->x(), top->y(), x, y);
+            }
 
             item->setPos(x, y);
 
@@ -136,13 +183,28 @@ bool BricksMoveManager::generate()
             {
                 m_bricks.push_back(item);
                 // FIXME: It looks strange from OOP view point
-                scene->addItem(item);
-                scene->addItem(item->getColideLine());
-                scene->addItem(item->getUnColideLine());
+                m_scene->addItem(item);
+                m_scene->addItem(item->getColideLine());
+                m_scene->addItem(item->getUnColideLine());
                 return true;
             }
 
         }
 
-    return false;
+        return false;
+}
+
+void BricksMoveManager::deleteBrick()
+{
+    for(int i=0; i<m_bricks.size(); i++)
+        if(m_bricks[i]->y() >= m_scene->height())
+        {
+            SolideBrick *brick = m_bricks[i];
+            m_scene->removeItem(brick->getColideLine());
+            m_scene->removeItem(brick->getUnColideLine());
+            m_scene->removeItem(brick);
+            m_bricks.removeAt(i);
+            delete brick;
+            LOG_D("Deleted! Size: " << m_bricks.size());
+        }
 }

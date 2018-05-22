@@ -15,6 +15,11 @@ public:
         virtual ~Hero();
         static Hero *instance(size_t countSkin = 3);
         virtual Creature::Type type() { return Type::Hero; }
+
+        int getMaxJumpingEdge() const { return m_maxJumpingEdge; }
+
+private:
+        const int m_maxJumpingEdge = 200;
 };
 
 #endif // HERO_H

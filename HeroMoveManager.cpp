@@ -49,9 +49,8 @@ void HeroMoveManager::initPosition()
 
 void HeroMoveManager::Jumping()
 {
-    static QVector<SolideBrick*> bricks = m_bricksManager->getBricks();
+    /*static*/ QVector<SolideBrick*> bricks = m_bricksManager->getBricks();
     static int old_y = 0;
-    static const int jumpEdge = 150;
 
     for(int i=0; i<bricks.size(); i++)
     {
@@ -63,7 +62,7 @@ void HeroMoveManager::Jumping()
         }
     }
 
-    if( old_y && qAbs(m_hero->y() - old_y) <= jumpEdge)
+    if( old_y && qAbs(m_hero->y() - old_y) <= m_hero->getMaxJumpingEdge())
         m_hero->setPos(m_hero->x(), m_hero->y() - 1);
     else
     {

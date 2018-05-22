@@ -10,6 +10,7 @@
 #include "hero.h"
 #include "gameview.h"
 #include "logger.h"
+#include "tools.h"
 
 class SolideBrick;
 class Hero;
@@ -18,9 +19,12 @@ class BricksMoveManager : public QObject
 {
    Q_OBJECT
 
-    enum timerKind {Main, Scrolling};
+    enum timerType {Main, Scrolling};
+    enum generateType {Initial, Additional};
     enum initGeometry : unsigned {X = 0, Y = 0, Width = 100, Height = 20};
-    const unsigned bricksCount = 20;
+
+    const unsigned initBricksCount = 15;
+    const unsigned stepBricksCount = 3;
 
 public:
         BricksMoveManager(QObject *parent = 0);
@@ -33,9 +37,13 @@ private slots:
         void scrollBricks();
 
 private:
-        QTimer *createTimer(timerKind kind, int interval, QTimer **timer);
-        void generateBricks(const int count);
-        bool generate();
+        QTimer *createTimer(timerType type, int interval, QTimer **timer);
+        void generateBricks(generateType type, std::pair<int, int> range, const int count);
+        bool generate(generateType type, std::pair<int, int> range);
+        void deleteBrick();
+
+        void calcBrickPosition(std::pair<int, int> range, int x1, int y1, int &x2, int &y2  /*OUT*/); // for additional
+        SolideBrick *findTopBrick() const;
 
 private:
         QVector<SolideBrick*> m_bricks;
@@ -46,6 +54,7 @@ private:
         QTimer *m_timerMain;
         QTimer *m_timerScrolling;
         QObject *m_parent;
+        QGraphicsScene *m_scene;
 
 signals:
         void timerStop();

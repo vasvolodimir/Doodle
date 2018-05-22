@@ -17,10 +17,10 @@ MainScreen *MainScreen::instance()
 
 void MainScreen::initScreen()
 {
+    this->setFixedSize(Width, Height);
+
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(new GameView(this));
     layout->setContentsMargins(0, 0, 0, 0);
     this->setLayout(layout);
-
-    this->setFixedSize(Width, Height);
 }
